@@ -4,6 +4,7 @@ import Logo from "../../olx-logo.png";
 import "./Signup.css";
 import { FirebaseContext } from "../../store/Context";
 
+
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -13,22 +14,18 @@ export default function Signup() {
   const history = useHistory();
   const [error, setError] = useState(false);
   const [message, setMessages] = useState("");
-  const [ph, setPh] = useState('');
-  const [phError, setPhError] = useState(false)
+  const [ph, setPh] = useState("");
+  const [phError, setPhError] = useState(false);
   const [psd, setPsd] = useState("");
-  const [auth, setAuth] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-   
-
-
 
     const regEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const PhoneReg = /^\d{10}$/;
     if (regEx.test(email)) {
       setMessages("Email is valid");
     }
-    if (username.length === 0 && email.length === 0 ) {
+    if (username.length === 0 && email.length === 0) {
       setError("true");
     } else if (!regEx.test(email)) {
       setMessages("Email is not valid ");
@@ -36,18 +33,20 @@ export default function Signup() {
       setMessages("");
     }
 
-
-    if (phone=== '') {
+    if (phone === "") {
       setPh("Phone is not valid ");
-    } 
-     
+    }
+
     if (password.length === 0 || password < 6) {
       setPsd("password is not valid");
     }
+   
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((result) =>{result.user.updateProfile({displayName:username })
+      .then((result) => {
+        result.user
+          .updateProfile({ displayName: username })
           .then(() => {
             firebase
               .firestore()
@@ -58,27 +57,22 @@ export default function Signup() {
                 username: username,
                 phone: phone,
               })
-            //     if(username && email && phone && password && regEx.test(email)){
-                history.push("/login");
-            // }
-    
-          }).catch((e) =>
-          setAuth('password in already in use')
-        );
+              alert('user added successfully')
+              
+                history.push("/login")
+            
+            })
+          })
           
-      })
-
-
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
- 
+    const token = localStorage.getItem("token");
 
     if (token) {
-        history.push('/')
+      history.push("/");
     }
-},[])
+  }, []);
 
   return (
     <div>
@@ -135,7 +129,7 @@ export default function Signup() {
           <label htmlFor="lname">Phone</label>
           <br />
           <input
-          // onKeyUp={()=>{handleMobile  }}
+            // onKeyUp={()=>{handleMobile  }}
             className="input"
             type="number"
             value={phone}
@@ -146,14 +140,13 @@ export default function Signup() {
             name="phone"
           />
           <br />
-   
-  
+
           {ph && phone.length !== 10 ? (
             <label style={{ color: "red" }}>phone cannot be empty </label>
           ) : (
             ""
           )}
-           
+
           <br />
           <label htmlFor="lname">Password</label>
           <br />
@@ -176,7 +169,13 @@ export default function Signup() {
           <br />
           <button>Signup</button>
         </form>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <p
             onClick={() => {
               history.push("/login");
@@ -185,7 +184,6 @@ export default function Signup() {
             Login
           </p>
           <br />
-          <span>{auth}</span>
         </div>
       </div>
     </div>

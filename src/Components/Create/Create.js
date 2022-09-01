@@ -45,6 +45,7 @@ const date = new Date()
           userId:user.uid,
           createdAt:date.toDateString()
         })
+        alert('uploaded Successfully')
         history.push('/')
         })
       })
